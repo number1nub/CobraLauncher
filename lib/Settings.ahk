@@ -3,10 +3,6 @@
 #Escapechar ``
 #CommentFlag ;
 
-;~ Interface for Gui Settings
-
-;~ Gui Settings Call (call Main, Side, or SLR)
-
 Gui_Settings()
 {
 	global
