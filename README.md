@@ -19,6 +19,13 @@ A powerful, feature packed application launcher utility that is highly customiza
 * Automatically reposition gui if off screen... also side guis
 
 ### CHANGELOG
+**2.6.5**
+- Cleaned up unecessary files
+- Added a check to update user's config version based on version in the c0bra.ahk \config folder
+
+**2.6.3**
+- Fixed issue in accessing the settings GUI from right-click menu
+
 **2.6.1**
 - Working release version
 - Multiple bug fixes and merge resolves

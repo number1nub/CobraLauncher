@@ -32,23 +32,44 @@ if (!FileExist(buttonSettings) || !FileExist(c0braSettings) || !FileExist(slrBut
 	TrayTip, c0bra Launcher, New configuration files copied to user settings directory!, 2, 1
 }
 
-try
+try 
 {
-	;~ Guis := JSON_Load(guiSettings)
-	Settings := JSON_Load(c0braSettings)
+	global Settings := JSON_Load(c0braSettings)
 }
-catch e 
+catch e
 {
 	MsgBox, 4144, Cobra Config Error, % "There is an error in your config file: " e.file 
-				. "`n`n" e.message (e.extra ? "`n`n" e.extra : "") "`n`nPlease correct this issue and then reload C0bra."
+	. "`n`n" e.message (e.extra ? "`n`n" e.extra : "") "`n`nPlease correct this issue and then reload C0bra."
 	ExitApp
 }
-
 
 Menu, Tray, Icon, % FileExist(tIco := (A_ScriptDir "\res\c0bra.ico")) ? tIco : ""
 
 ;}<<<==== Global Settings =====
 
+
+
+;{===== Update User Config Version ====>>>
+
+if (FileExist(serverSettings := (A_ScriptDir "\config\Settings.json")))
+{
+	serverConfig := JSON_Load(serverConfig)
+	if (serverConfig.Version != Settings.Version)
+	{
+		RegExMatch(serverConfig.Version, "(\d+?)\.(\d+?)(?:\.(\d+?)(?:\.(\d+))?)?", sVer)
+		RegExMatch(Settings.Version, "(\d+?)\.(\d+?)(?:\.(\d+?)(?:\.(\d+))?)?", uVer)
+		if (sVer1 > uVer1)
+			UpdateVer(serverConfig.Version)
+		if (sVer1 = uVer1 && sVer2 > uVer2)
+			UpdateVer(serverConfig.Version)
+		if (sVer1 = uVer1 && sVer2 = uVer2 && sVer3 > uVer3)
+			UpdateVer(serverConfig.Version)
+		if (sVer1 = uVer1 && sVer2 = uVer2 && sVer3 = uVer3 && sVer4 > uVer4)
+			UpdateVer(serverConfig.Version)
+	}
+}
+
+;}<<<==== Update User Config Version =====
 
 
 ;{==== Handle CmdLine Args ====>>
@@ -155,7 +176,6 @@ return
 #Include lib\Class_CTLCOLORS.ahk
 #Include lib\cIni.ahk
 #Include lib\ColorChooser.ahk
-#Include lib\Arguments.ahk
 #Include lib\ContextMenu.ahk
 #Include lib\Settings.ahk
 

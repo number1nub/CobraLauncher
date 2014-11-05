@@ -71,7 +71,11 @@ CopyTo:
 return
 
 
-
+UpdateVer(newVal)
+{
+	Settings.Version := newVal
+	JSON_Save(Settings, c0braSettings)
+}
 
 ScreenCheck(ByRef MouseX, ByRef MouseY, GuiWidth, GuiHeight)
 {
