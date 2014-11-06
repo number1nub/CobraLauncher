@@ -170,7 +170,7 @@ if (_reloaded)
 	goto, GUI
 return
 
-
+#Include %A_ScriptDir%
 #Include lib\Gui.ahk
 #Include lib\Methods.ahk
 #Include lib\Class_CTLCOLORS.ahk
