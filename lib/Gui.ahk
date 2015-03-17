@@ -1,4 +1,4 @@
-
+﻿
 ;{===== Main Hotkey Handler ====>>>
 
 	mainTrigger:
@@ -58,19 +58,14 @@ GUI:
 	GUI, Destroy
 	GUI, 1:Destroy
 	GUI, 2:Destroy
-
-	if !(_reloaded)
-		MouseGetPos, XPOS, YPOS
-	else
-		_reloaded := false
-
+	MouseGetPos, XPOS, YPOS
+	
 guiOldPos:
 	currGui 	:= 1	
 	ButtonList 	:= []
 	mainButtons	:= ""
 	
-	;Guis 	:= JSON_Load(guiSettings)
-	Buttons := JSON_Load(buttonSettings)
+	Buttons := JSON_Load(files.user.Buttons)
 	
 	buttonSpacing 		:= Settings.mainGui.buttonSpacing
 	buttonWidth 		:= Settings.mainGui.buttonWidth
@@ -105,7 +100,7 @@ guiOldPos:
 		searchTextSize 	:= Settings.search.textSize
 		searchHeight    := Settings.search.Height
 		searchBackText  := Settings.search.backText
-		goWidth         := Settings.mainGui.goWidth
+		goWidth         := Settings.search.goWidth
 		xGo 			:= (buttonWidth * 2) + (buttonSpacing * 2) - goWidth
 		searchWidth 	:= (buttonWidth * 2) - goWidth
 		searchTextWidth := searchWidth - 8
@@ -135,7 +130,7 @@ guiOldPos:
 		
 		; first key
 		if (A_Index = 1)
-		{	
+		{
 			GUI, Add, text, x%buttonSpacing% y+%buttonSpacing% w%buttonWidth% h%buttonHeight% 0x200 Center gButtonPress hwnd%A_HWND%, % A_LoopField
 				CTLCOLORS.Attach(%A_HWND%, ButtonList[A_LoopField].BackColor, ButtonList[A_LoopField].TextColor)
 			continue
@@ -151,7 +146,7 @@ guiOldPos:
 				GUI, Add, text, x%buttonSpacing% y+%buttonSpacing% w%LastButWidth% h%buttonHeight% 0x200 Center gButtonPress hwnd%A_HWND%, % A_LoopField
 					CTLCOLORS.Attach(%A_HWND%, ButtonList[A_LoopField].BackColor, ButtonList[A_LoopField].TextColor)
 				continue
-			}			
+			}
 			GUI, Add, text, x%buttonSpacing% y+%buttonSpacing% w%buttonWidth% h%buttonHeight% 0x200 Center gButtonPress hwnd%A_HWND%, % A_LoopField
 				CTLCOLORS.Attach(%A_HWND%, ButtonList[A_LoopField].BackColor, ButtonList[A_LoopField].TextColor)
 			continue
@@ -256,11 +251,9 @@ return
 		
 		ChildrenList := []
 		childrenButtons := ""
-		;~ numChildren := ""
 		
 		For key, value in ButtonList[A_GuiControl].Children
 		{
-			;~ numChildren += 1
 			ChildrenList.Insert(value, ButtonList[value])
 			childrenButtons .= (childrenButtons ? "," : "") value
 		}
@@ -269,62 +262,57 @@ return
 		GUI, %currGui%:-caption +ToolWindow +Owner%PREV_GUI%
 		GUI, %currGui%:margin, %sideButtonSpacing%, %sideButtonSpacing%
 		GUI, %currGui%:Font, s%sideTextSize% w%sideTextBold%, %sideTextFont%
-		
-		;Bookmarks
-
-		
-			if (A_GuiControl = "Bookmarks")
+		;
+		; Bookmarks
+		;
+		if (A_GuiControl = "Bookmarks")
+		{
+			MyFavs := A_MyDocuments "\..\Favorites\Links"
+			
+			; Loop through favorites folder for key, value, and count
+			loop, %MyFavs%\*.url,, 1
 			{
-				MyFavs := A_MyDocuments "\..\Favorites\Links"
-				
-				;LOOP THROUGH FAVORITES FOLDER FOR KEY, VALUE, AND COUNT
-
-					;~ numChildren := 
-					loop, %MyFavs%\*.url
-					{
-						if (A_LoopFileExt = "URL")
-						{
-							;~ numChildren += 1
-							THE_BOOKMARK := RegExReplace(A_LoopFileName, "i)\.[^.]*$")
-							THE_BOOKMARK_PATH := A_LoopFileLongPath
-							
-							A_HWND := "book" A_Index
-							
-							if (lastButton = "Bookmarks")
-							{
-								GUI, %currGui%:Add, text, x%sideButtonSpacing% y+%sideButtonSpacing% w%sideLastButWidth% h%sideButtonHeight% 0x200 Center g3ButtonPress hwnd%A_HWND%, % THE_BOOKMARK
-									CTLCOLORS.Attach(%A_HWND%, ButtonList.Bookmarks.BackColor, ButtonList.Bookmarks.TextColor)
-							}
-							else
-							{
-								GUI, %currGui%:Add, text, y+%sideButtonSpacing% w%sideButtonWidth% h%sideButtonHeight% 0x200 Center g3ButtonPress hwnd%A_HWND%, % THE_BOOKMARK
-									CTLCOLORS.Attach(%A_HWND%, ButtonList.Bookmarks.BackColor, ButtonList.Bookmarks.TextColor)
-							}
-						}
-					}
-			}
-		
-		;not bookmarks
-
-		
-			else
-			{
-				Loop, Parse, childrenButtons, `,
+				if (A_LoopFileExt = "URL")
 				{
-					A_HWND := "side" A_Index
-					if (lastButton = A_GuiControl)
+					THE_BOOKMARK := RegExReplace(A_LoopFileName, "i)\.[^.]*$")
+					THE_BOOKMARK_PATH := A_LoopFileLongPath
+					
+					A_HWND := "book" A_Index
+					
+					if (lastButton = "Bookmarks")
 					{
-						GUI, %currGui%:Add, text, x%sideButtonSpacing% y+%sideButtonSpacing% w%sideLastButWidth% h%sideButtonHeight% 0x200 Center g3ButtonPress hwnd%A_HWND%, % A_LoopField
-							CTLCOLORS.Attach(%A_HWND%, ChildrenList[A_LoopField].BackColor, ChildrenList[A_LoopField].TextColor)
+						GUI, %currGui%:Add, text, x%sideButtonSpacing% y+%sideButtonSpacing% w%sideLastButWidth% h%sideButtonHeight% 0x200 Center g3ButtonPress hwnd%A_HWND%, % THE_BOOKMARK
+							CTLCOLORS.Attach(%A_HWND%, ButtonList.Bookmarks.BackColor, ButtonList.Bookmarks.TextColor)
 					}
 					else
 					{
-						GUI, %currGui%:Add, text, y+%sideButtonSpacing% w%sideButtonWidth% h%sideButtonHeight% 0x200 Center g3ButtonPress hwnd%A_HWND%, % A_LoopField
-							CTLCOLORS.Attach(%A_HWND%, ChildrenList[A_LoopField].BackColor, ChildrenList[A_LoopField].TextColor)
+						GUI, %currGui%:Add, text, y+%sideButtonSpacing% w%sideButtonWidth% h%sideButtonHeight% 0x200 Center g3ButtonPress hwnd%A_HWND%, % THE_BOOKMARK
+							CTLCOLORS.Attach(%A_HWND%, ButtonList.Bookmarks.BackColor, ButtonList.Bookmarks.TextColor)
 					}
 				}
 			}
-		
+		}
+		;
+		; Not bookmarks
+		;
+		else
+		{
+			Loop, Parse, childrenButtons, `,
+			{
+				A_HWND := "side" A_Index
+				if (lastButton = A_GuiControl)
+				{
+					GUI, %currGui%:Add, text, x%sideButtonSpacing% y+%sideButtonSpacing% w%sideLastButWidth% h%sideButtonHeight% 0x200 Center g3ButtonPress hwnd%A_HWND%, % A_LoopField
+						CTLCOLORS.Attach(%A_HWND%, ChildrenList[A_LoopField].BackColor, ChildrenList[A_LoopField].TextColor)
+				}
+				else
+				{
+					GUI, %currGui%:Add, text, y+%sideButtonSpacing% w%sideButtonWidth% h%sideButtonHeight% 0x200 Center g3ButtonPress hwnd%A_HWND%, % A_LoopField
+						CTLCOLORS.Attach(%A_HWND%, ChildrenList[A_LoopField].BackColor, ChildrenList[A_LoopField].TextColor)
+				}
+			}
+		}
+	
 		;~ SideHeight := ((1 + numChildren)* sideButtonSpacing) + (numChildren * sideButtonHeight)
 		;~ SideWidth := (2 * sideButtonSpacing) + sideButtonWidth
 		;~ ScreenCheck(XPOS, YPOS, SideWidth, SideHeight)
@@ -343,7 +331,7 @@ SLR_GUI()
 	
 	GUI, 1:Destroy
 	
-	slrSettings := JSON_Load(slrButtonSettings)
+	slrSettings := JSON_Load(files.user.SLRButtons)
 	slrList := []
 	slrButtons := ""
 	
@@ -507,6 +495,7 @@ return
 ;}
 
 
+;{===== GUI Context Menu ====>>>
 
 GuiContextMenu:
 2GuiContextMenu:
@@ -521,7 +510,7 @@ GuiContextMenu:
 	MouseGetPos, XPOS, YPOS	
 	
 	; Get button name 
-	me := A_GuiControl	
+	me := A_GuiControl
 	meDisp := RegExReplace(me, "i)(.+)s$", "$1(s)")
 	meAdd  := RegExReplace(me, "i)(.+)s$", "$1")
 	
@@ -586,7 +575,7 @@ GuiContextMenu:
 	if (me != "GO")
 	{
 		if (me != "Bookmarks")
-			Menu, Title, Add, Rename <%me%>, QuickEditMenu
+			Menu, Title, Add, Edit <%me%>, QuickEditMenu
 		
 		Menu, Title, Add, Delete <%me%>, QuickEditMenu		
 	}
@@ -597,16 +586,12 @@ GuiContextMenu:
 	Menu, Title, Show, x%XPOS% y%YPOS%
 return
 
+;}<<<==== GUI Context Menu =====
+
+
 
 cancelMenuItem:
-	; Do nothing...
 return
-
-
-
-
-
-
 
 
 ;{===== Edit Color GUI Event Handlers ====>>>
@@ -615,31 +600,6 @@ return
 		GUI, CLR:Submit, nohide
 		CTLCOLORS.Change(ColorHwnd, daColor, "White")
 	return
-
-
-	;~ btnDefault:
-		;~ GUI, 1:Destroy
-		;~ GUI, 2:Destroy
-		;~ GUI, CLR:Submit
-		;~ GUI, CLR:Destroy
-		
-		;~ newColor := buttonList.Default.BackColor
-		
-		;~ for key, value in buttons
-		;~ {
-			;~ if (value.text = me)
-			;~ {
-				;~ buttons[key][A_ThisMenuItem] := newColor
-				;~ JSON_Save(buttons, buttonSettings)
-				
-				;~ GUI, 1:destroy
-				;~ GUI, Destroy
-				
-				;~ quickReload("Button Color Updated")
-			;~ }
-		;~ }
-	;~ return
-
 
 	okButton:
 		GUI, CLR:Submit
@@ -663,7 +623,7 @@ return
 				if (value.text = me)
 				{
 					buttons[key][A_ThisMenuItem] := newColor
-					JSON_Save(buttons, buttonSettings)
+					JSON_Save(buttons, files.user.Buttons)
 					
 					GUI, 1:destroy
 					GUI, Destroy
@@ -673,8 +633,6 @@ return
 			}
 		}
 	return
-
-
 
 	Custom:
 		GUI, CLR:Submit
@@ -697,7 +655,7 @@ return
 				if (value.text = me)
 				{
 					buttons[key][A_ThisMenuItem] := newColor
-					JSON_Save(buttons, buttonSettings)
+					JSON_Save(buttons, files.user.Buttons)
 					
 					GUI, 1:destroy
 					GUI, Destroy
@@ -706,77 +664,19 @@ return
 				}
 			}
 		}
-	
-	
-	
-		;~ GUI, CLR:submit
-		;~ GUI, CLR:destroy
-		;~ MsgBox % A_thismenuitem
-		;~ newColor := ColorPicker(A_ThisMenuItem)
-		;~ MsgBox % newColor
-		;~ if !(newColor)
-			;~ return
-		
-		;~ If (aGuiSettings)
-		;~ {
-			;~ if (newColor <> "")
-				;~ GuiControl, Settings:, %ColorButton%, %newColor%
-			
-			;~ if !(instr(ColorButton, "gui"))
-			;~ {
-				;~ for key, value in buttons
-				;~ {
-					;~ if (value.text = "Default")
-						;~ buttons[key][ColorButton] := newColor
-				;~ }
-			;~ }
-			;~ aGuiSettings :=
-			;~ ColorButton :=
-			;~ return
-		;~ }
-		;~ else
-		;~ {
-			;~ for key, value in buttons
-			;~ {
-				;~ if (value.text = me)
-				;~ {
-					;~ buttons[key][A_ThisMenuItem] := newColor
-					;~ JSON_Save(buttons, buttonSettings)
-					
-					;~ GUI, 1:destroy
-					;~ GUI, Destroy
-					
-					;~ quickReload("Button Color Updated")		
-				;~ }
-			;~ }
-		;~ }
-		;~ for key, value in buttons
-		;~ {
-			;~ if (value.text = me)
-			;~ {
-				;~ buttons[key][A_ThisMenuItem] := newColor
-				;~ JSON_Save(buttons, buttonSettings)
-				;~ GUI, 1:destroy
-				
-				;~ quickReload("Button Color Updated")
-			;~ }
-		;~ }
 	return
 
 ;}<<<==== Color GUI Event Handlers =====
-
 
 
 ;{===== Main GUI Button Click ====>>>
 
 ButtonPress:
 	mainBut := A_GuiControl
-
-	; kill GUI 3 before in case another GUI is selected
-	if !(WinExist(A_GuiControl))
-		GUI, 3:Destroy
 	
-	; hwnd of control pressed
+	if !(WinExist(A_GuiControl))
+		GUI, 3:Destroy	; In case another GUI is selected
+	
 	GuiControlGet, controlhwnd, Hwnd, %A_GuiControl%
 		
 	; GOOGLE SEARCH
@@ -786,11 +686,10 @@ ButtonPress:
 		{
 			if SEARCH
 			{
-				GUI, Submit
-				; if control is held for a website
+				GUI, Submit				
 				if instr(A_ThisHotkey, "^")
 				{
-					Run % "chrome.exe " instr(GSEARCH, ".com") ? "www." GSEARCH ".com": "www." GSEARCH
+					Run, % "chrome.exe " GSEARCH (urlPos:=GSEARCH~="i)\.(.{1,4})$" ? SubStr(GSEARCH,1,urlPos-1) : ".com")
 					GUI, Destroy
 					return
 				}
@@ -816,12 +715,12 @@ return
 
 3ButtonPress:
 	Next_Kill := A_GUI + 1
-	
+	TMM := A_TitleMatchMode
 	SetTitleMatchMode, 3
-	if !(WinExist(A_GuiControl))
+	if (!WinExist(A_GuiControl))
 		GUI, %NEXT_KILL%:Destroy ; kill GUI 2 before in case another GUI is selected
 
-	SetTitleMatchMode, 1
+	SetTitleMatchMode, %TMM%
 	WinGetActiveTitle, A_TITLE
 	
 	if (A_TITLE = "Bookmarks")

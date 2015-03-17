@@ -1,10 +1,4 @@
-#NoEnv
-#SingleInstance, Force
-#Escapechar ``
-#CommentFlag ;
-
-;~ Interface for Gui Settings
-
+﻿;~ Interface for Gui Settings
 ;~ Gui Settings Call (call Main, Side, or SLR)
 
 Gui_Settings()
@@ -15,7 +9,7 @@ Gui_Settings()
 	Gui, 2:Destroy
 	
 	;{```` Create CSV button lists ````}
-	Buttons    := JSON_Load(buttonSettings)
+	Buttons    := JSON_Load(files.user.Buttons)
 	ButtonList := []
 	
 	For key, value in Buttons
@@ -56,11 +50,11 @@ Gui_Settings()
 	Gui, Settings:Add, ListBox, xp y+7 wp h190 vuserHotkeys hwndHuserHotkeys, %bList%
 	Gui, Settings:Add, Button, xs+45 y+5 w100 h30 gaddUserHotkey, Add
 	Gui, Settings:Add, Button, x+25 yp w100 hp gremUserHotkey, Remove
-	
+	;}
 	
 	;{````  Appearance Tab Controls  ````}
 	Gui, Settings:Tab, Gui Appearance
-	
+		
 	Gui, Settings:Add, Text, x+5 y+40 w160 h30 Section, Button Height (pixels)
 	Gui, Settings:Add, Text, xp y+5 wp hp, Button Width (pixels)
 	Gui, Settings:Add, Text, xp y+5 wp hp, Button Spacing (pixels)
@@ -73,8 +67,8 @@ Gui_Settings()
 	Gui, Settings:Add, Edit, xp+5 ys-5 w150 h30 Center vbHeight, % Settings.mainGui.buttonHeight
 	Gui, Settings:Add, Edit, xp y+5 wp hp Center vbWidth, % Settings.mainGui.buttonWidth
 	Gui, Settings:Add, Edit, xp y+5 wp hp Center vbSpacing, % Settings.mainGui.buttonSpacing
-	Gui, Settings:Add, ComboBox, xp y+10 wp hp r6 0x100 Center vtFont, Lucida Sans Unicode|Times New Roman|Arial|Veranda|Calibri|BankGothic Md Bt
-		GuiControl, Settings:ChooseString, tFont, % Settings.mainGui.textFont
+	
+	Gui, Settings:Add, ComboBox, xp y+10 wp hp r6 0x100 Center vtFont, % GetFontList(Settings.mainGui.textFont)
 	Gui, Settings:Add, ComboBox, xp y+10 wp hp r2 0x100 Center vtBold, 400|700
 		GuiControl, Settings:ChooseString, tBold, % Settings.mainGui.textBold
 	Gui, Settings:Add, Edit, xp y+10 wp hp Center vtSize, % Settings.mainGui.textSize
@@ -84,8 +78,7 @@ Gui_Settings()
 	Gui, Settings:Add, Edit, xp+5 ys-5 w150 h30 Center vsbHeight, % Settings.sideGui.buttonHeight
 	Gui, Settings:Add, Edit, xp y+5 wp hp Center vsbWidth, % Settings.sideGui.buttonWidth
 	Gui, Settings:Add, Edit, xp y+5 wp hp Center vsbSpacing, % Settings.sideGui.buttonSpacing
-	Gui, Settings:Add, ComboBox, xp y+10 wp hp r6 0x100 Center vstFont, Lucida Sans Unicode|Times New Roman|Arial|Veranda|Calibri|BankGothic Md Bt
-		GuiControl, Settings:ChooseString, stFont, % Settings.sideGui.textFont
+	Gui, Settings:Add, ComboBox, xp y+10 wp hp r6 0x100 Center vstFont, % GetFontList(Settings.sideGui.textFont)
 	Gui, Settings:Add, ComboBox, xp y+10 wp hp r2 0x100 Center vstBold, 400|700
 		GuiControl, Settings:ChooseString, stBold, % Settings.sideGui.textBold
 	Gui, Settings:Add, Edit, xp y+10 wp hp Center vstSize, % Settings.sideGui.textSize
@@ -95,13 +88,12 @@ Gui_Settings()
 	Gui, Settings:Add, Edit, xp+5 ys-5 w150 h30 Center vslrbHeight, % Settings.SLRGui.buttonHeight
 	Gui, Settings:Add, Edit, xp y+5 wp hp Center vslrbWidth, % Settings.SLRGui.buttonWidth
 	Gui, Settings:Add, Edit, xp y+5 wp hp Center vslrbSpacing, % Settings.SLRGui.buttonSpacing
-	Gui, Settings:Add, ComboBox, xp y+10 wp hp r6 0x100 Center vslrtFont, Lucida Sans Unicode|Times New Roman|Arial|Veranda|Calibri|BankGothic Md Bt
-		GuiControl, Settings:ChooseString, slrtFont, % Settings.SLRGui.textFont
+	Gui, Settings:Add, ComboBox, xp y+10 wp hp r6 0x100 Center vslrtFont, % GetFontList(Settings.SLRGui.textFont)
 	Gui, Settings:Add, ComboBox, xp y+10 wp hp r2 0x100 Center vslrtBold, 400|700
 		GuiControl, Settings:ChooseString, slrtBold, % Settings.SLRGui.textBold
 	Gui, Settings:Add, Edit, xp y+10 wp hp Center vslrtSize, % Settings.SLRGui.textSize
 	Gui, Settings:Add, Button, xp y+5 wp h30 Center vslrguiColor gGuiColor, % Settings.SLRGui.guiBackColor
-	
+	;}
 	
 	;{```` Colors / Add-ons Tab Controls  ````}
 	Gui, Settings:Tab, Colors / Add-ons
@@ -116,14 +108,18 @@ Gui_Settings()
 	Gui, Settings:Add, Button, xp y+5 wp h30 Center vHLTextColor gGuiColor,  % ButtonList.Default.HLTextColor
 	Gui, Settings:Add, CheckBox, xs+5 y+5 w310 hp vChangeDefaults, Update all buttons to default colors now?
 	
-	Gui, Settings:Add, GroupBox, x+20 y35 w325 h130 Center, MAIN GUI ADD-ONS
+	Gui, Settings:Add, GroupBox, x+20 y35 w325 h230 Center, MAIN GUI ADD-ONS
 	Gui, Settings:Add, CheckBox, xp+5 yp+25 w310 h30 Section vmainSearch, Show Search Bar on Main Gui?
 		GuiControl, Settings:, mainSearch, % Settings.search.search ? 1 : 0
-	Gui, Settings:Add, Text, xp y+10 w125 h30, Search Bar Text
+	Gui, Settings:Add, Text, xp y+10 w125 h30, Search Bar Text:
 	Gui, Settings:Add, Edit, x+5 yp-5 w185 h30 Center vmainSearchText, % Settings.search.backText
-	Gui, Settings:Add, CheckBox, xs y+5 w310 hp vmainFooter, Show Footer on Main Gui?
+	Gui, Settings:Add, Text, xs y+10 h30, Search Bar Height:
+	Gui, Settings:Add, Edit, x+5 yp-5 w50 h30 vmainSearchHeight, % Settings.search.height
+	Gui, Settings:Add, Text, xs y+10 h30 w125, Go Button Width:
+	Gui, Settings:Add, Edit, x+5 yp-5 w50 h30 vmainSearchGoWidth, % Settings.search.goWidth
+	Gui, Settings:Add, CheckBox, xs y+10 w310 hp vmainFooter, Show Footer on Main Gui?
 		GuiControl, Settings:, mainFooter, % Settings.footer.footer ? 1 : 0
-	
+	;}
 	
 	;{````  The Closer Tab Controls  ````}
 	Gui, Settings:Tab, The Closer
@@ -149,19 +145,37 @@ Gui_Settings()
 	Gui, Settings:Add, ListBox, xp y+7 wp h190 vCloserTabs hwndHcloserTabs, %dList%
 	Gui, Settings:Add, Button, xs+45 y+5 w100 h30 gaddCloserTabs, Add
 	Gui, Settings:Add, Button, x+25 yp w100 hp gremCloserTabs, Remove
+	;}
 	
-	
-	;{````  End Tab Control  ````}
+	;{````  Main GUI Controls  ````}
 	Gui, Settings:Tab
 	
 	Gui, Settings:Add, Button, x210 y325 w100 h30 gallSet Default, ALL SET
 	Gui, Settings:Add, Button, x+50 yp wp hp gsettingsCancel, CANCEL
+	;}
 	
 	Gui, Settings:Show, Center, c0bra Settings
 	Return
 }
-		
-		
+
+
+GetFontList(selFont)
+{
+	fList := "", fFound := false
+	fontList := [ "Lucida Sans Unicode", "Times New Roman", "Arial", "Veranda", "Calibri", "BankGothic Md Bt" ]
+	for c, fnt in fontList
+	{
+		fList .= (fList ? "|" : "") fnt
+		if (fnt = selFont)
+		{
+			fList .= c = fontList.MaxIndex() ? "||" : "|"
+			fFound := true
+		}
+	}
+	if (!fFound)
+		fList .= "|" selFont "||"
+	return fList
+}
 
 allSet:
 	Gui, Settings:Submit
@@ -249,6 +263,8 @@ allSet:
 	
 	Settings.search.search := mainSearch ? 1 : 0
 	Settings.search.backText := mainSearchText
+	Settings.search.height := mainSearchHeight
+	Settings.search.goWidth := mainSearchGoWidth
 	Settings.footer.footer := mainFooter ? 1 : 0
 	
 	Settings.theCloser.hotkey := closerHotkey
@@ -264,8 +280,8 @@ allSet:
 		Settings.theCloser.closeTabIfActive[A_Index] := A_LoopField
 	
 	ButtonList := []
-	JSON_Save(buttons, buttonSettings)
-	JSON_save(Settings, c0braSettings)
+	JSON_Save(buttons, files.user.Buttons)
+	JSON_save(Settings, files.user.Settings)
 	Buttons := []
 	
 	Gui, Settings:Destroy
@@ -469,17 +485,4 @@ guiColor:
 	ColorButton := A_GuiControl
 
 	ColorGui()
-	
-	;~ theColor := RegExReplace(ColorChooser(), "i)0x")
-	
-	;~ if (theColor <> "")
-		;~ GuiControl, Settings:, guiColor, %theColor%
 return
-
-
-		
-;~ DefaultColor:
-	;~ ColorButton := A_GuiControl
-	;~ ColorGui()
-;~ return
-		

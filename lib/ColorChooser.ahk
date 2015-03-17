@@ -1,5 +1,7 @@
+
 ColorChooser()
 {
+
 	SizeOfStructForChooseColor = 0x24 
 	VarSetCapacity(StructForChooseColor, SizeOfStructForChooseColor, 0) 
 	VarSetCapacity(StructArrayForChooseColor, 64, 0) 
@@ -65,4 +67,3 @@ BGRtoRGB(oldValue)
   Value += ((oldValue & 0x0000ff) << 16)  
   return Value
 }
-return

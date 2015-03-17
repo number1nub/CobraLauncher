@@ -1,3 +1,8 @@
+﻿
+
+openConfigDir:	
+	Run, % "explore " files.userDir
+return
 
 
 superShorts:
@@ -7,19 +12,18 @@ return
 
 
 
-reloadMe:	
+reloadMe:
 	Reload	
 return
 
-; Reload the script & display the specified tray tip
-QuickReload(prompt = "", title = "")
-{
-	Run, %A_ScriptFullPath% %A_ScriptHwnd% `"%prompt%`" `"%title%`"
-}
 
 
 editMe:
-	run, edit %COBRA%\c0bra.ahk
+	if (A_IsCompiled) {
+		m("Option only valid for uncompiled AHK script!", "ico:!")
+		return
+	}
+	run, edit %A_ScriptFullPath%
 return
 
 
@@ -29,10 +33,9 @@ return
 	
 
 theCloser:
-	mousegetpos,,, win
+	MouseGetPos,,, win
 	WinGetTitle, winTitle, ahk_id %win%
 	WinGetClass, winClass, ahk_id %win%
-	
 	IfWinActive, ahk_group closeTabSpecialGroup
 	{
 		Send, {Blind}^w
@@ -74,8 +77,10 @@ return
 UpdateVer(newVal)
 {
 	Settings.Version := newVal
-	JSON_Save(Settings, c0braSettings)
+	JSON_Save(Settings, files.user.Settings)
+	QuickReload("Cobra is running...","Cobra Version " newVal)
 }
+
 
 ScreenCheck(ByRef MouseX, ByRef MouseY, GuiWidth, GuiHeight)
 {
@@ -112,7 +117,7 @@ ScreenCheck(ByRef MouseX, ByRef MouseY, GuiWidth, GuiHeight)
 */
 addButton(aText, CMD="", typeCmd="", argsCmd="", aColor="", Children=0, aParent=0)
 {
-	global buttons, buttonSettings
+	global buttons
 	
 	buttonKey				:= buttons.maxindex() + 1
 	buttons[buttonKey]		:= {}
@@ -140,7 +145,7 @@ addButton(aText, CMD="", typeCmd="", argsCmd="", aColor="", Children=0, aParent=
 				buttons[parentKey].Children.Insert(aText)
 	}
 	
-	JSON_Save(buttons, buttonSettings)
+	JSON_Save(buttons, files.user.Buttons)
 }
 
 
@@ -153,7 +158,7 @@ addButton(aText, CMD="", typeCmd="", argsCmd="", aColor="", Children=0, aParent=
 */
 deleteButton(aText)
 {
-	global buttons, buttonSettings
+	global buttons
 	
 	; Remove button
 	for key, value in buttons
@@ -174,7 +179,7 @@ deleteButton(aText)
 			if (childValue = aText)
 				value.Children.Remove(childKey)
 	
-	JSON_Save(buttons, buttonSettings)
+	JSON_Save(buttons, files.user.Buttons)
 }
 	
 
@@ -217,9 +222,8 @@ ON_LEFT(CONTROL_POSX)
 
 Google(GSEARCH)
 {
-	GSEARCH := RegExReplace(GSEARCH, "i)\s", "+")
-	GSEARCH := "http://www.google.com/search?hl=en&source=hp&q=" GSEARCH "&aq=f&aqi=&aql=&oq="
-	Run chrome.exe %GSEARCH%
+	goUrl := GSEARCH~="i)\.(.{1,4})$" ? GSEARCH : "http://google.com/search?q=" RegExReplace(RegExReplace(GSEARCH, "#", "%23"), "&", "%26")
+	Run % "chrome.exe " goUrl
 }
 
 
@@ -274,7 +278,7 @@ ColorPicker()
 	
 
 
-Execute(command, Txt)
+Execute(command, Txt) ;#[Cobra - Execute]
 {
 	If (!command)
 		return
@@ -328,19 +332,20 @@ Execute(command, Txt)
 	;~~~~~~~~~~~~~~~~~~~~~	
 	; [R] Run as Action
 	
-		Else if RegExMatch(command, "i)^\[R\]\s\K.+", runPath)
+		Else if RegExMatch(command, "i)^\[R\]\s*\K.+", runPath)
 		{
 			Gui, 1:Destroy
-			Run, % ExpandEnv(runPath),, UseErrorLevel
-			If ErrorLevel
-				MsgBox, 262160, Run :, % "Error with this command!`n" ExpandEnv(runPath), 2
+			try
+				Run, % ExpandEnv(runPath)
+			catch e
+				m("Error with this command!", ExpandEnv(runPath), e.message, "ico:x")
 		}
 		
 			
 	;~~~~~~~~~~~~~~~~~~~~~
 	;[P] PROGRAM AS ACTION
 	
-		else if RegExMatch(command, "i)^\[P\]\s\K.+", theProgram)
+		else if RegExMatch(command, "i)^\[P\]\s*\K.+", theProgram)
 		{
 			Gui, 1:Destroy
 			TMM := A_TitleMatchMode
@@ -359,9 +364,10 @@ Execute(command, Txt)
 			}
 			else
 			{
-				Run, % ExpandEnv(theProgram),, UseErrorLevel
-				if (ErrorLevel)
-					MsgBox, 262160, Run :, % "Error with this command!`n" ExpandEnv(runPath), 2
+				try
+					Run, % ExpandEnv(theProgram)
+				catch e
+					m("Error with this command!", ExpandEnv(theProgram), e.message, "ico:x")
 			}
 
 			SetTitleMatchMode, %TMM%
@@ -773,3 +779,45 @@ ExpandEnv(str)
    DllCall("ExpandEnvironmentStrings", "str", str, "str", dest, int, 1999, "Cdecl int")
    Return dest
 }
+
+
+/*!
+	Function: QuickReload([prompt, title])
+		Reload the script & display the specified tray tip
+	Parameters:
+		prompt - (Optional) Text to display in tray tip upon restart
+		title - (Optional) Title of tray tip to display upon restart
+*/
+QuickReload(prompt="", title="")
+{
+	Run, %A_ScriptFullPath% %A_ScriptHwnd% `"%prompt%`" `"%title%`"
+}
+
+
+totalCommander()
+{
+	TMM:=A_TitleMatchMode, DHW:=A_DetectHiddenWindows
+	DetectHiddenWindows, On
+	SetTitleMatchMode, 2
+	try {
+		Run, C:\TotalCMD\TOTALCMD64.EXE
+		WinWait, ahk_class TNASTYNAGSCREEN
+		WinActivate
+		ControlGetText, pressBtn, Window4	
+		ControlClick, &%pressBtn%
+	}
+	catch e
+		 m("Error!",e.extra,e.message,e.what,"ico:!")
+	SetTitleMatchMode, %TMM%, DetectHiddenWindows, %DHW%
+}
+
+
+m(t*) {
+	opt:=4096, icons:={"x": 16, "?": 32, "!": 48, "i": 64}	
+	if (RegExMatch(t[t.MaxIndex()], "ico:(x|\?|\!|i)", ico))
+		opt+=icons[ico1], t.Remove(t.MaxIndex())
+	Loop % t.MaxIndex()
+		txt .= (txt?"`n":"") (t[A_Index]?t[A_Index]:"`n")
+	MsgBox, % opt,, %txt%
+}
+

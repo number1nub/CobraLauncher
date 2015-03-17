@@ -1,4 +1,4 @@
-
+﻿
 
 ;{===== Context Menu Actions ====>>>
 
@@ -39,7 +39,7 @@ QuickEditMenu:
 		if (ErrorLevel || !argsCMD)
 			return
 
-		Children := 0				
+		Children := 0
 	}
 	;}
 
@@ -102,7 +102,7 @@ QuickEditMenu:
 	;}
 
 
-	;{````  Add a Bookmarks Button  ````}
+	;{```` Add a Bookmarks Button ````}
 	else if (menuCheck = "Bookmarks")
 	{
 		aText := "Bookmarks"
@@ -113,7 +113,7 @@ QuickEditMenu:
 	;}
 
 
-	;{````  Add a Main Menu Button  ````}
+	;{```` Add a Main Menu Button ````}
 	else if (menuCheck = "Sub-Menu Button")
 	{
 		GUI, Destroy
@@ -135,14 +135,11 @@ QuickEditMenu:
 
 
 	;{```` Edit A Button ````}
-	else if (A_ThisMenuItem = "Edit " me)
+	else if (A_ThisMenuItem = "Edit <" me ">")
 	{
 		GUI, 1:Destroy
 		
-		bIndex := ""
-		pIndex := ""
-		cIndex := ""
-		curVal := ""
+		bIndex:="", pIndex:="", cIndex:="", curVal:=""
 		
 		InputBox, newText, c0bra Configuration, Button Text:,,,,,,,, %me%
 		if (ErrorLevel || !newText)
@@ -150,10 +147,15 @@ QuickEditMenu:
 			msgbox, 4144, c0bra Configuration, Invalid entry.`n`nAborting
 			return
 		}
-		
-		
+
 		for index, value in Buttons
 		{
+			if (value.Text = me && IsObject(value.Children))
+			{
+				Buttons[index].Text := newText
+				JSON_Save(Buttons, files.user.Buttons)
+				quickReload("Changes saved...", me " Bu")
+			}
 			if (value.Children && !pIndex)
 			{
 				for childIndex, child in value.Children
@@ -162,7 +164,7 @@ QuickEditMenu:
 						pIndex := index
 						cIndex := childIndex
 					}
-			}
+			}			
 			else if (value.Text = me)
 			{
 				bIndex := index
@@ -181,180 +183,14 @@ QuickEditMenu:
 		Buttons[bIndex].Text := newText
 		Buttons[bIndex].Cmd.Arg := newCommand
 		
-		JSON_Save(Buttons, buttonSettings)
+		JSON_Save(Buttons, files.user.Buttons)
 		quickReload("Changes saved...", me " Button Updated")
 	}
 	;}
 
 
-	;~ ;{```` Add to No-run List ````}
-	;~ else if (A_ThisMenuItem = "Add to no-run list")
-	;~ {
-		;~ GUI, Destroy
-		;~ GUI, 1:Destroy
-		
-		;~ InputBox, addNoRun, Add to NoRun List, Enter a window title or class name in which to disable the c0bra hotkey,,375,175		
-		;~ if ErrorLevel
-			;~ return
-		
-		;~ for key, value in Settings.mainHotkey.disableIfActive
-			;~ if (value = addNorun)
-			;~ {
-				;~ MsgBox, 4096, c0bra No-run, The No-run window %addNorun% already exists.
-				;~ return
-			;~ }
-				
-		;~ Settings.mainHotkey.disableIfActive.Insert(addNorun)
-		;~ JSON_Save(Settings, c0braSettings)
-		;~ Reload	
-	;~ }
-	;~ ;}
-	
-	
-	;~ ;{```` Remove From No-Run ````}
-	;~ else if A_ThisMenuItem in %disableMainHKList%
-	;~ {
-		;~ GUI, Destroy
-		;~ GUI, 1:Destroy
-		
-		;~ MsgBox, 4113, c0bra No-run, Are you sure you want to remove %A_ThisMenuItem% from the No-run list?
-		;~ IfMsgBox OK
-		;~ {
-			;~ for key, value in Settings.mainhotkey.disableIfActive			
-				;~ if (value = A_ThisMenuItem)
-				;~ {
-					;~ Settings.mainHotkey.disableIfActive.Remove(key)
-					;~ JSON_Save(Settings, c0braSettings)
-					;~ Reload
-					;~ return
-				;~ }
-		;~ }
-		;~ else
-			;~ return
-	;~ }
-	;~ ;}
-	
-	
-	;~ ;{```` Add to Close Tab List ````}
-	;~ else if (A_ThisMenuItem = "Add to close tab list")
-	;~ {
-		;~ GUI, Destroy
-		;~ GUI, 1:Destroy
-		
-		;~ InputBox, addCloseTab, Add to close tab List, Enter a window title or class name in which to close tab,,375,175		
-		;~ if (ErrorLevel || !addCloseTab)
-			;~ return
-		
-		;~ for key, value in Settings.theCloser.closeTabIfActive
-			;~ if (value = addCloseTab)
-			;~ {
-				;~ MsgBox, 4096, c0bra Closer, The %addNorun% already exists in close tab list.
-				;~ return
-			;~ }
-				
-		;~ Settings.theCloser.closeTabIfActive.Insert(addCloseTab)
-		;~ JSON_Save(Settings, c0braSettings)
-		;~ Reload	
-	;~ }
-	;~ ;}
-	
-	
-	;~ ;{```` Toggle Search Bar ````}
-	;~ else if (A_ThisMenuItem = "Search Bar")
-	;~ {
-		;~ guis.search.search := !guis.search.search
-		;~ JSON_save(guis, guiSettings)
-		;~ quickReload("Search bar " (guis.search.search ? "Enabled" : "Disabled"))
-	
-		;~ IfWinExist, c0bra Main GUI
-		;~ {
-			;~ GUI, Destroy
-			;~ GUI, 1:Destroy
-			;~ goto, guiOldPos
-		;~ }
-		
-		;~ return
-	;~ }
-	;}
-	
-	
-	;{```` Main Gui Settings ````}
-	;~ else if (A_ThisMenuItem = "Main Gui Settings")
-	;~ {
-		;~ Gui_Settings("Main")
-		;~ theGui := "Main"
-		;~ return
-	;~ }
-	;}
-	
-	
-	;{```` Side Gui Settings ````}
-	;~ else if (A_ThisMenuItem = "Side Gui Settings")
-	;~ {
-		;~ Gui_Settings("Side")
-		;~ return
-	;~ }
-	;}
-	
-	
-	;{```` SLR Gui Settings ````}
-	;~ else if (A_ThisMenuItem = "SLR Gui Settings")
-	;~ {
-		;~ Gui_Settings("SLR")
-		;~ return
-	;~ }
-	;}
-
-
-	;{```` Change search text ````}
-	;~ else if (A_ThisMenuItem = "Change Search Text")
-	;~ {
-		;~ InputBox, backText, Search Text, Enter text to be shown in search box.,,,,,,,, % guis.search.BackText
-		;~ if (errorlevel)
-			;~ return
-		
-		;~ guis.search.BackText := backText
-		;~ JSON_save(guis, guiSettings)
-		;~ quickReload("Search text updated...")		
-	;~ }
-	;~ ;}
-
-
-	;~ ;{```` Toggle Footer ````}
-	;~ else if (A_ThisMenuItem = "Footer")
-	;~ {
-		;~ guis.footer.footer := !guis.footer.footer
-		;~ JSON_save(guis, guiSettings)
-		;~ quickReload("Footer " (guis.footer.footer ? "Enabled" : "Disabled"))		
-	;~ }
-	;}
-
-
-	;{```` Main GUI Options ````}
-	;~ else if temp_MenuItem in %GuiKeys%
-	;~ {
-		;~ InputBox, newOption, c0bra GUI Options, Enter the new value for A_ThisMenuitem.,,,,,,,, % guis.mainGui[temp_MenuItem] != "" ? guis.mainGui[temp_MenuItem] : guis.search[temp_MenuItem]
-		;~ if !(ErrorLevel)
-		;~ {
-			;~ if (guis.mainGui[temp_MenuItem] != "")
-			;~ {
-				;~ guis.mainGui[temp_MenuItem] := newOption
-				;~ JSON_save(guis, guiSettings)
-			;~ }
-			;~ else if (guis.search[temp_MenuItem] != "")
-			;~ {
-				;~ guis.search[temp_MenuItem] := newOption
-				;~ JSON_save(guis, guiSettings)
-			;~ }
-		;~ }
-			
-		;~ return
-	;~ }
-	;}
-
-
 	;{```` Delete A Button ````}
-	else if (InStr(A_ThisMenuItem, "Delete"))
+	else if (InStr(A_ThisMenuItem, "Delete <" me ">"))
 	{
 		MsgBox, 262196, c0bra Delete, Are you sure you want to delete the %me% button? 
 		ifmsgbox, Yes
@@ -387,7 +223,7 @@ QuickEditMenu:
 	;}
 	
 	
-	
+		
 	;********************************************************
 	;{___  Create The Button  _______________________________
 	
@@ -428,7 +264,6 @@ QuickEditMenu:
 			}
 		}
 	}
-		
 	addButton(aText, CMD, typeCmd, argsCmd, aColor, Children, Parent)
 	goto, gui
 	goto, guiOldPos
@@ -442,36 +277,6 @@ return
 ;{===== Tray Menu Actions ====>>>
 
 TrayText:
-
-	;{```` Change Main Hotkey ````}
-	;~ if (A_ThisMenuItem = "Trigger: " Settings.mainHotkey.mainHotkey)
-	;~ {
-		;~ mainHotkey := settings.mainHotkey.mainHotkey
-		;~ InputBox, newTrigger, c0bra Trigger, Enter new c0bra trigger hotkey(s)`nCurrent Hotkey - %mainHotkey%`n`nExample 1 - MButton`nExample 2 - ^#1`n,,,,,,,, % mainHotkey
-		;~ if (ErrorLevel || !newTrigger)
-			;~ return		
-		;~ Settings.mainHotkey.mainHotkey := newTrigger
-		;~ JSON_Save(Settings, c0braSettings)
-		;~ quickReload("New Trigger: " newTrigger, "Main Hotkey Changed")
-	;~ }
-	;}
-
-	;{```` Add new user hotkey ````}
-	;~ else if (A_ThisMenuItem = "Add New Hotkey")
-	;~ {
-		;~ InputBox, newTrigger, New Hotkey, Hotkey trigger:
-		;~ If (ErrorLevel || !newTrigger)
-			;~ return
-		;~ InputBox, newAction, New Hotkey, % "Hotkey action:`n(use either [F], [L], [R] or [P])"
-		;~ If (ErrorLevel || !newAction)
-			;~ return
-		
-		;~ Settings.userHotkeys[newTrigger] := newAction
-		;~ JSON_Save(Settings, c0braSettings)
-		;~ quickReload("ACTION:`n" newAction, "Added Hotkey <" modReplace(newTrigger) ">")
-	;~ }
-	;}
-	
 	;{````  Edit/Delete User Hotkey  ````}
 	;~ else if (RegExMatch(A_ThisMenuItem, "i)^<(?P<Trigger>.+?)> - <(?P<Action>.+)>$", hk))
 	;~ {
@@ -481,7 +286,7 @@ TrayText:
 		;~ if (!newTrigger)
 		;~ {
 			;~ Settings.userHotkeys.Remove(hkTrigger)
-			;~ JSON_Save(Settings, c0braSettings)
+			;~ JSON_Save(Settings, files.user.Settings)
 			;~ quickReload("Deleted Hotkey <" modReplace(hkTrigger) ">")
 		;~ }
 		;~ InputBox, newAction, Edit Hotkey, % "Hotkey action:",,600,160,,,,, % hkAction
@@ -489,13 +294,10 @@ TrayText:
 			;~ return
 		;~ Settings.userHotkeys.Remove(hkTrigger)
 		;~ Settings.userHotkeys[newTrigger] := newAction
-		;~ JSON_Save(Settings, c0braSettings)
+		;~ JSON_Save(Settings, files.user.Settings)
 		;~ quickReload("New Hotkey: " modReplace(newTrigger) "`nAction:`n" newAction, "Updated Hotkey <" modReplace(hkTrigger) ">")
 	;~ }
 	;}
-			return
+return
 
 ;}<<<==== Tray Menu Actions =====
-
-
-
