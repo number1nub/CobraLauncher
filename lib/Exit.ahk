@@ -1,0 +1,3 @@
+﻿Exit() {
+	ExitApp
+}

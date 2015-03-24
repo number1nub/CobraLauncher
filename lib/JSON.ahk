@@ -1,8 +1,5 @@
 #Escapechar \ 
 
-
-
-; Static initialization for stdlib, by fincs at autohotkey.com forums      ; 
 __json_init() 
 { 
    global 
@@ -11,22 +8,18 @@ __json_init()
    JSON_init() 
 } 
 
-
-; Simple access to global variable $$                                      ; 
-$(path, val = "") { 
-
+$(path, val = "") {
     global $$ 
     tempobj := $$ 
-
     last := (instr(path, ".") ? substr(path, 1+instr(path, ".", false, -1)) : path) 
-
-    Loop, Parse, path, \. 
+    Loop, Parse, path, \.
     { 
         if (val != "") { 
             if (last = A_loopfield) { 
                 tempObj[A_loopfield] := val 
                 continue 
-            } else if (!tempObj[A_Loopfield]) 
+            }
+			else if (!tempObj[A_Loopfield]) 
                 tempObj[A_loopfield] := Object() 
         } else if (!tempObj) 
             break 
@@ -41,7 +34,7 @@ $(path, val = "") {
 } 
 
 ;  Save JSON string to file                                              ; 
-JSON_save(obj, filename, spacing=35, block="    ", level=1) { 
+JSON_save(obj, filename, spacing=35, block="    ", level=1) {
 
     file         := FileOpen(filename, "w") 
     jsonString   := JSON_to(obj, spacing, block, level) "\n" 

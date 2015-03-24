@@ -7,6 +7,10 @@ A powerful, feature packed application launcher utility that is highly customiza
 * Fully customizable interface
 
 ### CHANGELOG
+3.1.0
+- Restructure of files
+- Adding XML config files; preparing for rewrite to XML
+
 3.0.7
 - Lots of code cleanup & file restructuring
 - Changed handling of global settings (file paths) to use one global object instead of multiple vars

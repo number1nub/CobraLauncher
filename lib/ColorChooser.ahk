@@ -1,7 +1,4 @@
-
-ColorChooser()
-{
-
+ColorChooser() {
 	SizeOfStructForChooseColor = 0x24 
 	VarSetCapacity(StructForChooseColor, SizeOfStructForChooseColor, 0) 
 	VarSetCapacity(StructArrayForChooseColor, 64, 0) 

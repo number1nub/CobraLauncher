@@ -1,18 +1,13 @@
-﻿
-
-;{===== Context Menu Actions ====>>>
-
-QuickEditMenu:
+﻿QuickEditMenu:
 	temp_MenuItem := RegExReplace(A_ThisMenuItem, "\s")
 	
-	for key in Settings.mainGui
+	for key in settings.mainGui
 		GuiKeys := (guiKeys != "" ? guiKeys "," : "") key
-	for key in Settings.search
+	for key in settings.search
 		GuiKeys := (guiKeys != "" ? guiKeys "," : "") key
 
 	StringReplace, menuCheck, A_ThisMenuItem, main%A_Space%
 	menuCheck := Trim(menuCheck)
-	
 	
 	;{```` Add Program Button ````}
 	If (menuCheck = "Program")
@@ -43,7 +38,6 @@ QuickEditMenu:
 	}
 	;}
 
-
 	;{```` Add a Folder Button ````}
 	else if (menuCheck = "Folder")
 	{
@@ -71,8 +65,7 @@ QuickEditMenu:
 		
 		Children := 0
 	}
-	;}
-	
+	;}	
 
 	;{```` Add a Send Keys Button ````}
 	else if (menuCheck = "Send Keys")
@@ -101,7 +94,6 @@ QuickEditMenu:
 	}
 	;}
 
-
 	;{```` Add a Bookmarks Button ````}
 	else if (menuCheck = "Bookmarks")
 	{
@@ -111,7 +103,6 @@ QuickEditMenu:
 		Children := 0
 	}
 	;}
-
 
 	;{```` Add a Main Menu Button ````}
 	else if (menuCheck = "Sub-Menu Button")
@@ -132,7 +123,6 @@ QuickEditMenu:
 		Children := []
 	}
 	;}
-
 
 	;{```` Edit A Button ````}
 	else if (A_ThisMenuItem = "Edit <" me ">")
@@ -188,21 +178,19 @@ QuickEditMenu:
 	}
 	;}
 
-
 	;{```` Delete A Button ````}
 	else if (InStr(A_ThisMenuItem, "Delete <" me ">"))
 	{
-		MsgBox, 262196, c0bra Delete, Are you sure you want to delete the %me% button? 
+		MsgBox, 262196, c0bra Delete, Are you sure you want to delete the %me% button?
 		ifmsgbox, Yes
 		{
 			GUI, Destroy
 			deleteButton(me)
-			goto, guiOldPos
+			ShowGui(1)
 		}
 		return
 	}
 	;}
-
 
 	;{```` Change Button Colors ````}
 	else if (RegExMatch(Trim(A_ThisMenuItem), "i)Color\s*$"))
@@ -211,7 +199,6 @@ QuickEditMenu:
 		return
 	}
 	;}
-
 
 	;{```` Unhandled Menu Item ````}
 	else
@@ -222,38 +209,26 @@ QuickEditMenu:
 	}
 	;}
 	
-	
-		
 	;********************************************************
 	;{___  Create The Button  _______________________________
 	
 	Parent := InStr(A_ThisMenuItem, "main") ? "0" : me
-		
-	; Default or parent colors or color picker
-	aColor := {}
+	aColor := {}	; Default or parent colors or color picker
 	
-	;CHANGED: Removed the option to fully customize the button on creation (too annoying)
-
 	dBack   := buttonList.Default.BackColor
 	dText   := buttonList.Default.TextColor
 	dHLBack := buttonList.Default.HlBackColor
 	dHLText := buttonList.Default.HlTextColor
-	
 	aColor[1] := dBack
 	aColor[2] := dText
 	aColor[3] := dHLBack
 	aColor[4] := dHLText
-
-	if (Parent)
-	{
+	if (Parent) {
 		pBack   := buttonList[Parent].BackColor
 		pText   := buttonList[Parent].TextColor
 		pHLBack := buttonList[Parent].HlBackColor
-		pHLText := buttonList[Parent].HlTextColor
-		
-		;CHANGED: Only prompt if parent button isn't using default colors
-		if (pBack != dBack || pText != dText || pHLBack != dHLBack || pHLText != dHLText)
-		{
+		pHLText := buttonList[Parent].HlTextColor		
+		if (pBack != dBack || pText != dText || pHLBack != dHLBack || pHLText != dHLText) {
 			MsgBox, 4132, c0bra Colors, Use same color settings as parent button (%Parent%)?`n`nIf NO, current default colors will be used.
 			IfMsgBox Yes
 			{
@@ -265,39 +240,7 @@ QuickEditMenu:
 		}
 	}
 	addButton(aText, CMD, typeCmd, argsCmd, aColor, Children, Parent)
-	goto, gui
-	goto, guiOldPos
+	ShowGui()
+	ShowGui(1)
 	;}
 return
-
-;}<<<==== Context Menu Actions =====
-
-
-
-;{===== Tray Menu Actions ====>>>
-
-TrayText:
-	;{````  Edit/Delete User Hotkey  ````}
-	;~ else if (RegExMatch(A_ThisMenuItem, "i)^<(?P<Trigger>.+?)> - <(?P<Action>.+)>$", hk))
-	;~ {
-		;~ InputBox, newTrigger, Edit Hotkey, % "Hotkey trigger:`n`n(To DELETE hotkey, input blank value)",,400,175,,,,, % hkTrigger
-		;~ If (ErrorLevel)
-			;~ return		
-		;~ if (!newTrigger)
-		;~ {
-			;~ Settings.userHotkeys.Remove(hkTrigger)
-			;~ JSON_Save(Settings, files.user.Settings)
-			;~ quickReload("Deleted Hotkey <" modReplace(hkTrigger) ">")
-		;~ }
-		;~ InputBox, newAction, Edit Hotkey, % "Hotkey action:",,600,160,,,,, % hkAction
-		;~ If (ErrorLevel || !newAction)
-			;~ return
-		;~ Settings.userHotkeys.Remove(hkTrigger)
-		;~ Settings.userHotkeys[newTrigger] := newAction
-		;~ JSON_Save(Settings, files.user.Settings)
-		;~ quickReload("New Hotkey: " modReplace(newTrigger) "`nAction:`n" newAction, "Updated Hotkey <" modReplace(hkTrigger) ">")
-	;~ }
-	;}
-return
-
-;}<<<==== Tray Menu Actions =====
