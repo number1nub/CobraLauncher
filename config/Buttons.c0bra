@@ -1,0 +1,69 @@
+{
+    "1": {
+        "BackColor":                 363636,
+        "guiColor":                  "White",
+        "HlBackColor":               "Aqua",
+        "HlTextColor":               "Black",
+        "Main Gui Settings":         "Maroon",
+        "Text":                      "Default",
+        "TextColor":                 "Aqua"
+    },
+    "2": {
+        "BackColor":                 363636,
+        "HlBackColor":               "Aqua",
+        "HlTextColor":               "Black",
+        "Text":                      "GO",
+        "TextColor":                 "Aqua"
+    },
+    "3": {
+        "BackColor":                 363636,
+        "Children": {
+            "1":                     "Internet Explorer"
+        },
+        "HlBackColor":               "Aqua",
+        "HlTextColor":               "Black",
+        "Text":                      "Programs",
+        "TextColor":                 "Aqua"
+    },
+    "4": {
+        "BackColor":                 363636,
+        "Cmd": {
+            "Arg":                   "iexplore.exe",
+            "Type":                  "P"
+        },
+        "HlBackColor":               "Aqua",
+        "HlTextColor":               "Black",
+        "Level":                     1,
+        "Text":                      "Internet Explorer",
+        "TextColor":                 "Aqua"
+    },
+    "5": {
+        "BackColor":                 363636,
+        "Children": {
+            "1":                     "C"
+        },
+        "HlBackColor":               "Aqua",
+        "HlTextColor":               "Black",
+        "Text":                      "Folders",
+        "TextColor":                 "Aqua"
+    },
+    "6": {
+        "BackColor":                 363636,
+        "Cmd": {
+            "Arg":                   "C:\\",
+            "Type":                  "R"
+        },
+        "HlBackColor":               "Aqua",
+        "HlTextColor":               "Black",
+        "Level":                     1,
+        "Text":                      "C",
+        "TextColor":                 "Aqua"
+    },
+    "7": {
+        "BackColor":                 363636,
+        "HlBackColor":               "Aqua",
+        "HlTextColor":               "Black",
+        "Text":                      "Bookmarks",
+        "TextColor":                 "Aqua"
+    }
+}

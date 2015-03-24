@@ -1,0 +1,40 @@
+<?xml version="1.0"?>
+<Settings>
+	<ButtonTypes>
+		<Type name="Program"></Type>
+		<Type name="File"></Type>
+		<Type name="Folder"></Type>
+		<Type name="User Function"></Type>
+		<Type name="User Label"></Type>
+		<Type name="Send Keys"></Type>
+		<Type name="Bookmarks"></Type>
+	</ButtonTypes>
+	<DisableWinList></DisableWinList>
+	<MainHotkey Trigger="MButton" HoldAction="[R] %A_AppData%\c0bra"></MainHotkey>
+	<UserHotkeys>
+		<Hotkey Trigger="!MButton">[R] C:\OneDrive\AHK\GUI Tools\Get Color Code.ahk</Hotkey>
+		<Hotkey Trigger="^!MButton">[R] C:\OneDrive\AHK\Custom Hotstrings\Custom Hotstrings.ahk</Hotkey>
+	</UserHotkeys>
+	<Guis>
+		<Gui id="Default" BackColor="Aqua" TextColor="Black" FontType="Arial" FontSize="16" FontWeight="400">
+			<Button Height="45" Width="180" Spacing="1"></Button>
+		</Gui>
+		<Gui id="c0bra Main GUI"></Gui>
+		<Gui id="Side GUI">
+			<Button Height="40"></Button>
+		</Gui>
+		<Gui id="SLRGui" BackColor="Yellow" TextColor="White"></Gui>
+		<Footer Enabled="0" Height="15" BackColor="Black" TextColor="Aqua" FontType="Arial" FontSize="16" FontWeight="400"></Footer>
+		<Search Enabled="1" Height="35" GoWidth="55" FontType="Arial" FontSize="12" FontWeight="400">Enter search or url...</Search>
+	</Guis>
+	<TheCloser>
+		<Hotkey Trigger="~LButton &amp; RButton"></Hotkey>
+		<CloseTabWinList>
+			<Win>Chrome_WidgetWin_1</Win>
+			<Win>IEFrame</Win>
+			<Win>firefox</Win>
+		</CloseTabWinList>
+		<DisableWinList></DisableWinList>
+	</TheCloser>
+	<Version>3.1.0</Version>
+</Settings>
