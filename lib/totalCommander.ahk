@@ -1,15 +1,18 @@
 ﻿totalCommander() {
 	TMM:=A_TitleMatchMode, DHW:=A_DetectHiddenWindows
 	DetectHiddenWindows, On
-	SetTitleMatchMode, 2
+	SetTitleMatchMode, 3
 	try {
 		Run, C:\TotalCMD\TOTALCMD64.EXE
 		WinWait, ahk_class TNASTYNAGSCREEN
 		WinActivate
-		ControlGetText, pressBtn, Window4	
-		ControlClick, &%pressBtn%
+		WinWaitActive
+		ControlGetText, pressBtn, Window4
+		ControlFocus, &%pressBtn%
+		ControlSend, &%pressBtn%, {Enter}
 	}
 	catch e
-		 m("Error!",e.extra,e.message,e.what,"ico:!")
-	SetTitleMatchMode, %TMM%, DetectHiddenWindows, %DHW%
+		m("Error!",e.extra,e.message,e.what,"ico:!")
+	SetTitleMatchMode, %TMM%
+	DetectHiddenWindows, %DHW%
 }

@@ -8,10 +8,29 @@
 
 	StringReplace, menuCheck, A_ThisMenuItem, main%A_Space%
 	menuCheck := Trim(menuCheck)
+
+	;{```` Add a Main Menu Button ````}
+	if (menuCheck = "Sub-Menu Button")
+	{
+		GUI, Destroy
+		GUI, 1:Destroy
+		
+		redoSubMenu:
+		GUI +LastFound +OwnDialogs +AlwaysOnTop
+		InputBox, aText, Sub-Menu Name, Enter the name for the sub-menu button:
+		if (ErrorLevel || !aText)
+			return					
+		if (buttonCheck(buttons, aText))
+			goto, redoSubMenu
+			
+		CMD      := ""
+		typeCMD  := ""
+		Children := []
+	}
+	;}
 	
 	;{```` Add Program Button ````}
-	If (menuCheck = "Program")
-	{
+	else if (menuCheck = "Program") {
 		GUI, Destroy
 		GUI, 1:Destroy
 		
@@ -39,8 +58,7 @@
 	;}
 
 	;{```` Add a Folder Button ````}
-	else if (menuCheck = "Folder")
-	{
+	else if (menuCheck = "Folder") {
 		Gui, Destroy
 		GUI, 1:Destroy
 		
@@ -51,7 +69,7 @@
 		GUI +LastFound +OwnDialogs +AlwaysOnTop
 		InputBox, aText, Button Title, What is the button Title?
 		if (ErrorLevel || !aText)
-				return
+			return
 				
 		if (buttonCheck(buttons, aText))
 			goto, redoFolder
@@ -68,8 +86,7 @@
 	;}	
 
 	;{```` Add a Send Keys Button ````}
-	else if (menuCheck = "Send Keys")
-	{
+	else if (menuCheck = "Send Keys") {
 		Gui, Destroy
 		GUI, 1:Destroy
 		
@@ -93,6 +110,29 @@
 		Children := 0
 	}
 	;}
+	
+	;{````  Add a User Function Button  ````}
+	else if (menuCheck = "User Function") {
+		Gui, Destroy
+		CMD := 1
+		typeCMD := "F"
+		
+		redoUserFunc:
+		Gui, +LastFound +OwnDialogs +AlwaysOnTop
+		InputBox, aText, Button Title, Enter the button text:
+		if (ErrorLevel || !aText)
+			return
+		if (buttonCheck(buttons, aText))
+			goto, redoUserFunc
+		
+		Gui, +OwnDialogs
+		InputBox, argsCMD, User Function, Enter function call (optionally include parenthesis & parameters to pass):
+		if (ErrorLevel || !argsCMD)
+			return
+		
+		Children := 0
+	}
+	;}
 
 	;{```` Add a Bookmarks Button ````}
 	else if (menuCheck = "Bookmarks")
@@ -101,26 +141,6 @@
 		CMD      := ""
 		typeCMD  := ""
 		Children := 0
-	}
-	;}
-
-	;{```` Add a Main Menu Button ````}
-	else if (menuCheck = "Sub-Menu Button")
-	{
-		GUI, Destroy
-		GUI, 1:Destroy
-		
-		redoSubMenu:
-		GUI +LastFound +OwnDialogs +AlwaysOnTop
-		InputBox, aText, Sub-Menu Name, Enter the name for the sub-menu button:
-		if (ErrorLevel || !aText)
-			return					
-		if (buttonCheck(buttons, aText))
-			goto, redoSubMenu
-			
-		CMD      := ""
-		typeCMD  := ""
-		Children := []
 	}
 	;}
 

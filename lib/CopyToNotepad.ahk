@@ -1,13 +1,13 @@
 ﻿CopyToNotepad() {
 	try selText := GetSelection()
 	catch e {
-		msgbox % e
+		m(e)
 		return
 	}
 	noteFilePath := A_Temp "\CopyToNotepad.txt"
 	noteFileObj := FileOpen(noteFilePath, "w")	
 	if (!IsObject(noteFileObj)) {
-		msgbox Failed to create temp text file in user's temp folder...
+		m("Failed to create temp text file in user's temp folder...", "ico:!")
 		return
 	}
 	noteFileObj.Write(selText)

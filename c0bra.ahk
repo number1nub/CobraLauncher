@@ -52,54 +52,54 @@ OnMessage(0x200, "WM_MOUSEMOVE")
 return
 
 
-#Include %A_ScriptDir%\lib
-#Include addButton.ahk
-#Include buttonCheck.ahk
-#Include ButtonPress.ahk
-#Include cancelMenuItem.ahk
-#Include Class_CTLCOLORS.ahk
-#Include ColorChooser.ahk
-#Include ColorGui.ahk
-#Include ColorPicker.ahk
-#Include ContextMenu.ahk
-#Include CopyToNotepad.ahk
-#Include CopyToRun.ahk
-#Include deleteButton.ahk
-#Include editMe.ahk
-#Include Execute.ahk
-#Include Exit.ahk
-#Include ExpandEnv.ahk
-#Include FileCheck.ahk
-#Include GetModifiers.ahk
-#Include GetSelection.ahk
-#Include Google.ahk
-#Include GuiEvents.ahk
-#Include m.ahk
-#Include mainTrigger.ahk
-#Include MainTriggerHold.ahk
-#Include MainTriggerPressed.ahk
-#Include MenuSetup.ahk
-#Include Methods.ahk
-#Include modReplace.ahk
-#Include On Left.ahk
-#Include OpenConfigDir.ahk
-#Include PasteVal.ahk
-#Include QuickReload.ahk
-#Include RegisterHotkeys.ahk
-#Include reloadMe.ahk
-#Include ScreenCheck.ahk
-#Include settings.ahk
-#Include ShowGui.ahk
-#Include SIDE GUI.ahk
-#Include SideButtonPress.ahk
-#Include SLR GUI.ahk
-#Include StrLower.ahk
-#Include StrUpper.ahk
-#Include superShorts.ahk
-#Include ToggleCase.ahk
-#Include totalCommander.ahk
-#Include Trimmer.ahk
-#Include UpdateVer.ahk
-#Include Volume.ahk
-#Include WM MOUSEMOVE.ahk
-#Include GetFontList.ahk
+#Include <addButton>
+#Include <buttonCheck>
+#Include <ButtonPress>
+#Include <cancelMenuItem>
+#Include <Class_CTLCOLORS>
+#Include <ColorChooser>
+#Include <ColorGui>
+#Include <ColorPicker>
+#Include <ContextMenu>
+#Include <CopyToNotepad>
+#Include <CopyToRun>
+#Include <deleteButton>
+#Include <editMe>
+#Include <Execute>
+#Include <Exit>
+#Include <ExpandEnv>
+#Include <FileCheck>
+#Include <GetModifiers>
+#Include <GetSelection>
+#Include <Google>
+#Include <GuiEvents>
+#Include <m>
+#Include <mainTrigger>
+#Include <MainTriggerHold>
+#Include <MainTriggerPressed>
+#Include <MenuSetup>
+#Include <Methods>
+#Include <modReplace>
+#Include <On Left>
+#Include <OpenConfigDir>
+#Include <PasteVal>
+#Include <QuickReload>
+#Include <RegisterHotkeys>
+#Include <reloadMe>
+#Include <ScreenCheck>
+#Include <settings>
+#Include <ShowGui>
+#Include <SIDE GUI>
+#Include <SideButtonPress>
+#Include <SLR GUI>
+#Include <StrLower>
+#Include <StrUpper>
+#Include <superShorts>
+#Include <ToggleCase>
+#Include <totalCommander>
+#Include <Trimmer>
+#Include <UpdateVer>
+#Include <Volume>
+#Include <WM MOUSEMOVE>
+#Include <GetFontList>
+#Include <ProFile>

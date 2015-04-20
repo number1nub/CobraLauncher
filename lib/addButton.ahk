@@ -5,11 +5,11 @@
 	buttons[buttonKey].Text	:= aText
 	if (CMD) {
 		buttons[buttonKey].Cmd		:= {}
-		buttons[buttonKey].Cmd.Type:= typeCmd
+		buttons[buttonKey].Cmd.Type := typeCmd
 		buttons[buttonKey].Cmd.Arg	:= argsCmd
 	}	
-	buttons[buttonKey].BackColor 	:= aColor[1]
-	buttons[buttonKey].TextColor 	:= aColor[2]
+	buttons[buttonKey].BackColor   := aColor[1]
+	buttons[buttonKey].TextColor   := aColor[2]
 	buttons[buttonKey].HlBackColor := aColor[3]
 	buttons[buttonKey].HlTextColor := aColor[4]	
 	if (Children)
